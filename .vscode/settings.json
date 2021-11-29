@@ -8,9 +8,6 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    "python.analysis.extraPaths": [
-        "./helpers"
-    ],
     "python.testing.pytestArgs": [
         "challenges"
     ]

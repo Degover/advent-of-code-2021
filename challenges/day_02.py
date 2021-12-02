@@ -1,4 +1,3 @@
-# -- Common -- #
 class Submarine:
     COMMAND_SKIP_COUNT = {
         'f': 8,
@@ -45,15 +44,12 @@ class AimedSubmarine(Submarine):
         else:
             self.aim += quantity
            
-
- # -- Part 1 -- #
 def part1_solution(raw_input):
     submarine = Submarine()
     submarine.parse_raw_input(raw_input)
 
     return submarine.depth * submarine.horizontal_pos
 
- # -- Part 2 -- #
 def part2_solution(raw_input):
     submarine = AimedSubmarine()
     submarine.parse_raw_input(raw_input)

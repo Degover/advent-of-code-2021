@@ -1,24 +1,26 @@
 # -- Common -- #
-class SubmarineCommandReader:
+class Submarine:
+    COMMAND_SKIP_COUNT = {
+        'f': 8,
+        'd': 5,
+        'u': 3
+    }
 
     def __init__(self):
         self.depth = 0
         self.horizontal_pos = 0
 
     def parse_raw_input(self, raw_input):
-        command = ''
-        previous_char = ''
+        index = 0
+        max_index = len(raw_input)
 
-        for char in raw_input:
-            if(char == '\n'):
-                self.read_command(command, int(previous_char))
-                command = ''
-            elif(command == ''):
-                command = char
+        while(index < max_index):
+            command = raw_input[index]
+            skip_count = self.COMMAND_SKIP_COUNT.get(command)
+            quantity = int(raw_input[index + skip_count])
 
-            previous_char = char
-
-        self.read_command(command, int(previous_char))
+            self.read_command(command, quantity)
+            index += skip_count + 2
 
     def read_command(self, char_command, quantity):
         if(char_command == 'f'):
@@ -28,10 +30,10 @@ class SubmarineCommandReader:
         else:
             self.depth += quantity
 
-class SubmarineCommandReaderWithAim(SubmarineCommandReader):
+class AimedSubmarine(Submarine):
 
     def __init__(self):
-        SubmarineCommandReader.__init__(self)
+        Submarine.__init__(self)
         self.aim = 0
 
     def read_command(self, char_command, quantity):
@@ -46,14 +48,14 @@ class SubmarineCommandReaderWithAim(SubmarineCommandReader):
 
  # -- Part 1 -- #
 def part1_solution(raw_input):
-    submarine = SubmarineCommandReader()
+    submarine = Submarine()
     submarine.parse_raw_input(raw_input)
 
     return submarine.depth * submarine.horizontal_pos
 
  # -- Part 2 -- #
 def part2_solution(raw_input):
-    submarine = SubmarineCommandReaderWithAim()
+    submarine = AimedSubmarine()
     submarine.parse_raw_input(raw_input)
 
     return submarine.depth * submarine.horizontal_pos
@@ -63,4 +65,3 @@ if __name__ == '__main__':
 
     print(part1_solution(input))
     print(part2_solution(input))
-

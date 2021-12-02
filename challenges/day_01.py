@@ -1,21 +1,37 @@
-# -- Common -- #
-def parse_raw_input(raw_input):
-    number = ''
+class InputParser:
+    def __init__(self, raw_input):
+        self.input = raw_input
 
-    for char in raw_input:
-        if(char == '\n'):
-            yield int(number)
-            number = ''
-        else:
-            number += char
+    def parse(self):
+        number = ''
 
-    yield int(number)
+        for char in self.input:
+            if(char == '\n'):
+                yield int(number)
+                number = ''
+            else:
+                number += char
 
-# -- Part 1 -- #
-def day_01_part_1_solution(raw_input):
+        yield int(number)
+
+    def accumulate_parse(self):
+        parser_gen = self.parse()
+        previous_depths = [
+            next(parser_gen),
+            next(parser_gen)
+        ]
+
+        for depth in parser_gen:
+            previous_depths.append(depth)
+            yield previous_depths[0] + previous_depths[1] + previous_depths[2]
+            previous_depths.pop(0)
+
+
+def part1_solution(raw_input):
     previous_depth = -1
     increase_count = -1
-    for depth in parse_raw_input(raw_input):
+    parser = InputParser(raw_input)
+    for depth in parser.parse():
         if(depth > previous_depth):
             increase_count += 1
         
@@ -23,20 +39,11 @@ def day_01_part_1_solution(raw_input):
 
     return increase_count
 
-# -- Part 2 -- #
-def accumulate_depth(raw_input):
-    previous_depths = []
-    for depth in parse_raw_input(raw_input):
-        previous_depths.append(depth)
-
-        if(len(previous_depths) == 3):
-            yield previous_depths[0] + previous_depths[1] + previous_depths[2]
-            previous_depths.pop(0)
-
-def day_01_part_2_solution(raw_input):
+def part2_solution(raw_input):
     previous_depth = -1
     increase_count = -1
-    for depth in accumulate_depth(raw_input):
+    parser = InputParser(raw_input)
+    for depth in parser.accumulate_parse():
         if(depth > previous_depth):
             increase_count += 1
         
@@ -47,6 +54,6 @@ def day_01_part_2_solution(raw_input):
 if __name__ == '__main__':
     input = open('inputs/01.txt', 'r').read()
 
-    print(day_01_part_1_solution(input))
-    print(day_01_part_2_solution(input))
+    print(part1_solution(input))
+    print(part2_solution(input))
 

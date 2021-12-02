@@ -34,7 +34,7 @@ class Day_01_Tests(unittest.TestCase):
         result = part1_solution(raw_test_input)
         self.assertEqual(result, 7)
 
-    def test_RunSolution_ShouldResolve(self):
+    def test_RunSolution_WithPart2_ShouldResolve(self):
         result = part2_solution(raw_test_input)
         self.assertEqual(result, 5)
 

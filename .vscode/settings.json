@@ -10,5 +10,6 @@
     "python.testing.unittestEnabled": true,
     "python.testing.pytestArgs": [
         "challenges"
-    ]
+    ],
+    "workbench.colorTheme": "Default Dark+"
 }

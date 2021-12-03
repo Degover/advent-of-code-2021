@@ -10,13 +10,22 @@ class Day_03_Tests(unittest.TestCase):
         self.assertEqual(result, 1)
 
     def testBitCounter_ReadInput_ShouldBeCorrect(self):
-        input = '''11110000
-11110000
-11110000'''
-        expected_result = [1, 1, 1, 1, 0, 0, 0, 0]
+        input = '''111111000000
+111111000000
+111111000000'''
+        expected_result = [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
 
         counter = BitCounter()
         counter.read_input(input)
         result = counter.get_most_common_bits()
 
         self.assertListEqual(result, expected_result)
+
+    def test_RunSolution_WithPart1_ShouldBeCorrect(self):
+        input = '''111111000000
+111111000000
+111111000000'''
+        expected_result = 254016
+        
+        result = part1_solution(input)
+        self.assertEqual(result, expected_result)

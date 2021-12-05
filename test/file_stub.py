@@ -12,7 +12,7 @@ class FileStub:
         else:
             current_value = self.array[self.current_index]
             self.current_index += 1
-            return current_value
+            return current_value + '\n'
 
     def set_array(self, array):
         self.array = array

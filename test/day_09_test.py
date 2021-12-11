@@ -10,7 +10,7 @@ test_input = [
     '9899965678'
 ]
 
-class Day_09_Test(unittest.TestCase):
+class Day_09_Tests(unittest.TestCase):
 
     def testInputParser_ParseLine_WithDefaultLine_ShouldBeCorrect(self):
         parser = InputParser(None)

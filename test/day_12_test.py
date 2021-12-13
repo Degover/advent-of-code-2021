@@ -207,7 +207,7 @@ class Day_12_Tests(unittest.TestCase):
         
         mapper = CavePathMapper()
         mapper.read_file_input(file_stub)
-        output = [ [ node.name for node in path ] for path in mapper.map_paths() ]
+        output = [ [ node.name for node in path.path_array ] for path in mapper.map_paths() ]
 
         expected_output = [
             ['start','A','b','A','c','A','end'],
@@ -231,7 +231,7 @@ class Day_12_Tests(unittest.TestCase):
         
         mapper = CavePathMapper(2)
         mapper.read_file_input(file_stub)
-        output = [ [ node.name for node in path ] for path in mapper.map_paths() ]
+        output = [ [ node.name for node in path.path_array ] for path in mapper.map_paths() ]
 
         expected_output = [
             ['start','A','b','A','b','A','c','A','end'],
@@ -286,6 +286,6 @@ class Day_12_Tests(unittest.TestCase):
         for input, _, expected_output in many_test_input:
             file_stub = FileStub()
             file_stub.set_array(input)
-            output = part1_solution(file_stub)
+            output = part2_solution(file_stub)
             self.assertEqual(output, expected_output)
 

@@ -29,9 +29,9 @@ class CavePath:
 
     def __init__(self, path=None):
         if path:
-            self.path_array = path.path_array
+            self.path_array = path.path_array[:]
             self.last_node = path.last_node
-            self.small_cave_counter = path.small_cave_counter
+            self.small_cave_counter = path.small_cave_counter.copy()
             self.biggest_count = path.biggest_count
         else:
             self.path_array = []
@@ -88,23 +88,26 @@ class CavePathMapper:
             node_1.connect_node(node_2)
 
     def map_paths(self):
-        paths = []
-        unended_paths = [
-            [self.start_node]
-        ]
+        starting_path = CavePath()
+        starting_path.append(self.start_node)
+
+        paths: list[CavePath] = []
+        unended_paths: list[CavePath] = [ starting_path ]
         while len(unended_paths) > 0:
-            new_paths = []
+            new_paths: list[CavePath] = []
             for path in unended_paths:
-                last_node = path[-1]
+                last_node = path.last_node
                 for connected_node in last_node.connections:
-                    cloned_path = path[:]
+                    cloned_path = CavePath(path)
 
                     if connected_node == 'start':    
                         continue
                     elif connected_node == 'end':
                         cloned_path.append(connected_node)
                         paths.append(cloned_path)
-                    elif not connected_node.is_small_cave or len([node for node in cloned_path if node == connected_node]) < self.max_small_cave_len:
+                    elif (not connected_node.is_small_cave
+                        or path.get_node_count(connected_node) == 0
+                        or path.get_biggest_small_cave_count() < self.max_small_cave_len):
                         cloned_path.append(connected_node)
                         new_paths.append(cloned_path)
 

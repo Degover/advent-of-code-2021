@@ -95,6 +95,98 @@ class Day_12_Tests(unittest.TestCase):
         self.assertTrue(node_1 in node_2.connections)
         self.assertTrue(node_2 in node_1.connections)
 
+    def testCavePath_CreateNew_WithOtherPath_ShouldClone(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+        path.append(node)
+
+        new_path = CavePath(path)
+
+        self.assertNotEqual(path, new_path)
+        self.assertDictEqual(path.small_cave_counter, new_path.small_cave_counter)
+        self.assertListEqual(path.path_array, new_path.path_array)
+        self.assertEqual(path.last_node, new_path.last_node)
+        self.assertEqual(path.biggest_count, new_path.biggest_count)
+
+    def testCavePath_Append_WithDefaultNode_ShouldAppendCorrectly(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+
+        self.assertListEqual(path.path_array, [ node ])
+        self.assertEqual(path.last_node, node)
+
+    def testCavePath_Append_WithSmallCaveNode_ShouldIncrementCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+
+        self.assertDictEqual(path.small_cave_counter, { 'a': 1 })
+
+    def testCavePath_Append_WithBigCaveNode_ShouldNotIncrementCount(self):
+        path = CavePath()
+        node = CaveNode('A')
+
+        path.append(node)
+
+        self.assertDictEqual(path.small_cave_counter, { })
+
+    def testCavePath_GetNodeCount_WithBigCaveNode_ShouldNotHaveCount(self):
+        path = CavePath()
+        node = CaveNode('A')
+
+        path.append(node)
+        output = path.get_node_count(node)
+
+        self.assertEqual(output, 0)
+
+    def testCavePath_GetNodeCount_WithUnexistingCaveNode_ShouldNotHaveCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        output = path.get_node_count(node)
+
+        self.assertEqual(output, 0)
+
+    def testCavePath_GetNodeCount_WithSmallCaveNode_ShouldHaveCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+        path.append(node)
+        output = path.get_node_count(node)
+
+        self.assertEqual(output, 2)
+
+    def testCavePath_GetBiggestSmallCaveCount_WithSmallCaveNode_ShouldHaveCorrectCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+        path.append(node)
+        path.append(CaveNode('b'))
+        output = path.get_biggest_small_cave_count()
+
+        self.assertEqual(output, 2)
+
+    def testCavePath_IsIn_WithUnexistingCaveNode_ShouldNotHaveCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        self.assertFalse(path.is_in(node))
+
+    def testCavePath_IsIn_WithExistingCaveNode_ShouldNotHaveCount(self):
+        path = CavePath()
+        node = CaveNode('a')
+
+        path.append(node)
+
+        self.assertTrue(path.is_in(node))
+
     def testCavePathMapper_ReadFileInput_WithSimpleNodes_ShouldReadCorrectly(self):
         file_stub = FileStub()
         file_stub.set_array([

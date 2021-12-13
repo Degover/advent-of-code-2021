@@ -25,6 +25,44 @@ class CaveNode:
         self.connections.append(node)
         node.connections.append(self)
 
+class CavePath:
+
+    def __init__(self, path=None):
+        if path:
+            self.path_array = path.path_array
+            self.last_node = path.last_node
+            self.small_cave_counter = path.small_cave_counter
+            self.biggest_count = path.biggest_count
+        else:
+            self.path_array = []
+            self.last_node = None
+            self.small_cave_counter = {}
+            self.biggest_count = 0
+
+    def is_in(self, node: CaveNode):
+        return node in self.path_array
+
+    def append(self, node: CaveNode):
+        self.path_array.append(node)
+        self.last_node = node
+        if node.is_small_cave:
+            if node.name in self.small_cave_counter:
+                self.small_cave_counter[node.name] += 1
+            else:
+                self.small_cave_counter[node.name] = 1
+            count = self.small_cave_counter[node.name]
+            if count > self.biggest_count:
+                self.biggest_count = count
+
+    def get_biggest_small_cave_count(self):
+        return self.biggest_count
+
+    def get_node_count(self, node: CaveNode):
+        if node.name in self.small_cave_counter:
+            return self.small_cave_counter[node.name]
+        else:
+            return 0
+
 class CavePathMapper:
 
     def __init__(self, max_small_cave_len=1):

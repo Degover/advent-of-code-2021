@@ -143,7 +143,7 @@ class Day_13_Tests(unittest.TestCase):
 
     def testTransparentPaper_Fold_WithXAxisAndUnevenToLeft_ShouldFoldCorrectly(self):
         paper = TransparentPaper()
-        paper.max_y = 4
+        paper.max_y = 6
         paper.points_array = self._createFalseGrid(6, 6)
         paper.points_array[0][0] = True
         paper.points_array[1][2] = True
@@ -177,7 +177,7 @@ class Day_13_Tests(unittest.TestCase):
 
     def testTransparentPaper_Fold_WithYAxisAndEven_ShouldFoldCorrectly(self):
         paper = TransparentPaper()
-        paper.max_x = 6
+        paper.max_x = 4
         paper.points_array = self._createFalseGrid(4, 4)
         paper.points_array[0][0] = True
         paper.points_array[3][1] = True
@@ -192,6 +192,40 @@ class Day_13_Tests(unittest.TestCase):
         expected_points[0][4] = True
         self.assertListEqual(paper.points_array, expected_points)
 
+    def testTransparentPaper_Fold_WithYAxisAndUnevenToTop_ShouldFoldCorrectly(self):
+        paper = TransparentPaper()
+        paper.max_x = 6
+        paper.points_array = self._createFalseGrid(6, 6)
+        paper.points_array[0][0] = True
+        paper.points_array[2][1] = True
+        paper.points_array[6][1] = True
+        paper.points_array[5][3] = True
+
+        paper.fold('y', 4)
+
+        expected_points = self._createFalseGrid(6, 3)
+        expected_points[0][0] = True
+        expected_points[2][1] = True
+        expected_points[3][3] = True
+        self.assertListEqual(paper.points_array, expected_points)
+
+    def testTransparentPaper_Fold_WithYAxisAndUnevenToBottom_ShouldFoldCorrectly(self):
+        paper = TransparentPaper()
+        paper.max_x = 6
+        paper.points_array = self._createFalseGrid(6, 6)
+        paper.points_array[0][0] = True
+        paper.points_array[5][1] = True
+        paper.points_array[1][4] = True
+        paper.points_array[3][4] = True
+
+        paper.fold('y', 2)
+
+        expected_points = self._createFalseGrid(6, 3)
+        expected_points[2][0] = True
+        expected_points[1][1] = True
+        expected_points[3][4] = True
+        self.assertListEqual(paper.points_array, expected_points)
+
     def testPart1_RunSolution_WithExampleInput_ShouldBeCorrect(self):
         file_stub = FileStub()
         file_stub.set_array(test_input)
@@ -199,13 +233,4 @@ class Day_13_Tests(unittest.TestCase):
         output = part1_solution(file_stub)
 
         expected_output = 17
-        self.assertEqual(output, expected_output)
-
-    def testPart2_RunSolution_WithExampleInput_ShouldBeCorrect(self):
-        file_stub = FileStub()
-        file_stub.set_array(test_input)
-
-        output = part2_solution(file_stub)
-
-        expected_output = 0
         self.assertEqual(output, expected_output)

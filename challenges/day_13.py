@@ -39,7 +39,41 @@ class TransparentPaper:
             self.max_x = x
 
     def fold(self, axis: str, level: int):
-        pass
+        folded_points = []
+
+        if axis == 'x':
+            self.max_x = level-1
+            folded_points = [ [] for _ in range(self.max_y+1) ]
+
+            first_part = [ row[:level] for row in self.points_array ]
+            last_part = [ row[level+1:] for row in self.points_array ]
+
+            first_len = len(first_part[0])
+            last_len = len(last_part[0])
+            max_len = max([first_len, last_len])
+            
+            for i in range(max_len):
+                for y in range(self.max_y+1):
+                    first_x = i - (max_len - first_len)
+                    first_point = first_x >= 0 and first_part[y][first_x]
+
+                    last_x = (i+1) * -1
+                    last_point = abs(last_x) <= max_len and last_part[y][last_x]
+                    
+                    folded_points[y].append(first_point or last_point)
+
+        else:
+            self.max_y = level-1
+
+            first_part = self.points_array[:level]
+            last_part = self.points_array[level+1:]
+
+            for i in range(level):
+                folded_points.append([])
+                for x in range(self.max_x+1):
+                    folded_points[i].append(first_part[i][x] or last_part[(i+1) * -1][x])
+
+        self.points_array = folded_points
 
 def part1_solution(file_input):
     return 0

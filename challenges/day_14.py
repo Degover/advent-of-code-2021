@@ -11,43 +11,57 @@ class Polymerator:
         for line in file_input:
             self.rules[(line[0], line[1])] = line[6]
 
-    def step_pair(self, letter_1: str, letter_2: str, steps_left: int):
-        mid_letter = self.rules[(letter_1, letter_2)]
-        
-        print(f'level: {steps_left}; pair: {letter_1}, {letter_2}; result: {mid_letter}')
-
-        if steps_left == 1: #this is the last step
-            return [mid_letter]
-        else:
-            return (self.step_pair(letter_1, mid_letter, steps_left-1) 
-                # + [mid_letter] 
-                + self.step_pair(mid_letter, letter_2, steps_left-1))
-
-    def test(self, letter_1: str, letter_2: str, steps_left: int):
-        last_arr = [letter_1, letter_2]
+    def do_steps(self, total_stelps: int) -> list[str]:
+        last_arr = self.template
         arr = []
-        for line in range(1, steps_left+1):
-            letter_count = (2+line)*2 - 1
+        for _ in range(1, total_stelps+1):
+
             last_row_len = len(last_arr)
             for i in range(last_row_len):
-                # if i is 0:
-                #     arr.append(letter_1)
-                if i is last_row_len-1:
-                    arr.append(letter_2)
+                if i == last_row_len-1:
+                    arr.append(self.template[-1])
                 else:
                     arr.append(last_arr[i])
-                    arr.append(self.rules[(last_arr[i-1], last_arr[i])])
+                    arr.append(self.rules[(last_arr[i], last_arr[i+1])])
 
             last_arr = arr
             arr = []
         
-        return last_arr#[1:-1]
+        return last_arr
 
 def part1_solution(file_input):
-    return 0
+    polymerator = Polymerator()
+    polymerator.read_file_input(file_input)
+    result = polymerator.do_steps(10)
+
+    counter = {}
+    def increment_count(letter: str):
+        nonlocal counter
+        if letter in counter:
+            counter[letter] += 1
+        else:
+            counter[letter] = 1
+
+    list([ increment_count(letter) for letter in result])
+    counts = counter.values()
+    return max(counts) - min(counts)
     
 def part2_solution(file_input):
-    return 0
+    polymerator = Polymerator()
+    polymerator.read_file_input(file_input)
+    result = polymerator.do_steps(40)
+
+    counter = {}
+    def increment_count(letter: str):
+        nonlocal counter
+        if letter in counter:
+            counter[letter] += 1
+        else:
+            counter[letter] = 1
+
+    list([ increment_count(letter) for letter in result])
+    counts = counter.values()
+    return max(counts) - min(counts)
 
 if __name__ == '__main__':
     with open('inputs/14.txt', 'r') as file_input:

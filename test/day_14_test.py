@@ -47,16 +47,17 @@ class Day_14_Tests(unittest.TestCase):
         }
         self.assertDictEqual(polymerator.rules, expected_rules)
 
-    def testPolymerator_StepPair_WithSingleStep_ShouldReturnCorrectly(self):
+    def testPolymerator_DoSteps_WithSingleStep_ShouldReturnCorrectly(self):
         polymerator = Polymerator()
         polymerator.rules = { ('N', 'N'): 'B' }
+        polymerator.template = ['N', 'N']
 
-        output = polymerator.step_pair('N', 'N', 1)
+        output = polymerator.do_steps(1)
 
-        expected_output = ['B']
+        expected_output = ['N', 'B', 'N']
         self.assertListEqual(output, expected_output)
 
-    def testPolymerator_StepPair_WithThreeSteps_ShouldReturnCorrectly(self):
+    def testPolymerator_DoSteps_WithThreeSteps_ShouldReturnCorrectly(self):
         polymerator = Polymerator()
         polymerator.rules = {
             ('N', 'N'): 'B',
@@ -64,10 +65,40 @@ class Day_14_Tests(unittest.TestCase):
             ('B', 'N'): 'B',
             ('B', 'B'): 'N'
         }
+        polymerator.template = ['N', 'N']
 
-        output = polymerator.test('N', 'N', 3)
+        output = polymerator.do_steps(3)
 
         expected_output = ['N', 'B', 'B', 'N', 'B', 'N', 'B', 'B', 'N']
+        self.assertListEqual(output, expected_output)
+
+    def testPolymerator_DoSteps_WithExampleInput_ShouldReturnCorrectly(self):
+        polymerator = Polymerator()
+        polymerator.rules = {
+            ('C', 'H'): 'B',
+            ('H', 'H'): 'N',
+            ('C', 'B'): 'H',
+            ('N', 'H'): 'C',
+            ('H', 'B'): 'C',
+            ('H', 'C'): 'B',
+            ('H', 'N'): 'C',
+            ('N', 'N'): 'C',
+            ('B', 'H'): 'H',
+            ('N', 'C'): 'B',
+            ('N', 'B'): 'B',
+            ('B', 'N'): 'B',
+            ('B', 'B'): 'N',
+            ('B', 'C'): 'B',
+            ('C', 'C'): 'N',
+            ('C', 'N'): 'C',
+        }
+        polymerator.template = ['N', 'N', 'C', 'B']
+
+        output = polymerator.do_steps(4)
+
+        expected_output = ['N', 'B', 'B', 'N', 'B', 'N', 'B', 'B', 'C', 'C', 'N', 'B', 'C', 'N', 'C', 'C', 'N', 'B',
+            'B', 'N', 'B', 'B', 'N', 'B', 'B', 'B', 'N', 'B', 'B', 'N', 'B', 'B', 'C', 'B', 'H', 'C', 'B', 'H', 'H',
+            'N', 'H', 'C', 'B', 'B', 'C', 'B', 'H', 'C', 'B']
         self.assertListEqual(output, expected_output)
 
     def testPart1_RunSolution_WithExampleInput_ShouldBeCorrect(self):
@@ -85,7 +116,5 @@ class Day_14_Tests(unittest.TestCase):
 
         output = part2_solution(file_stub)
 
-        expected_output = -1
+        expected_output = 2188189693529
         self.assertEqual(output, expected_output)
-
-

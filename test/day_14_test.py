@@ -1,5 +1,4 @@
 import unittest
-from unittest.case import expectedFailure
 from challenges.day_14 import *
 from test.file_stub import FileStub
 

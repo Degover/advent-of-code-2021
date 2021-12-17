@@ -38,25 +38,30 @@ class CaveMapper:
                     break
 
                 node = Node(int(char), x, len(self.grid)-1)
-                if self.source is None:
-                    self.source = node
-                    self.source.risk_distance = 0
-                    self.source.risk_level = 0
-
-                self.target = node
                 self.grid[-1].append(node)
 
-                if len(self.grid) > 1:
-                    up_node = self.grid[-2][x]
+        self.source = self.grid[0][0]
+        self.source.risk_distance = 0
+        self.source.risk_level = 0
+
+        self.target = self.grid[-1][-1]
+
+        self.map_node_connections()
+        self.unvisited_nodes.append(self.source)
+
+    def map_node_connections(self):
+        for y, row in enumerate(self.grid):
+            for x, node in enumerate(row):
+                node.connections = []
+                if y > 0:
+                    up_node = self.grid[y-1][x]
                     up_node.connections.append(node)
                     node.connections.append(up_node)
 
-                if len(self.grid[-1]) > 1:
-                    left_node = self.grid[-1][x-1]
+                if x > 0:
+                    left_node = self.grid[y][x-1]
                     left_node.connections.append(node)
                     node.connections.append(left_node)
-
-        self.unvisited_nodes.append(self.source)
 
     def visit_node(self, node: Node):
         self.unvisited_nodes.remove(node)
@@ -80,13 +85,43 @@ class CaveMapper:
 
         return self.target.risk_distance
 
+    def expand_map(self) -> None:
+        first_tile = list([ row.copy() for row in self.grid ])
+        tile_height = len(first_tile[0])
+        new_grid = list([ [] for _ in range(tile_height) ])
+        for i in range(5):
+            for y, row in enumerate(first_tile):
+                for x, node in enumerate(row):
+                    risk_level = node.risk_level + i
+                    if risk_level > 9:
+                        risk_level -= 9
+                    new_grid[y].append(Node(risk_level, x + i*len(row), y))
+
+        first_tile_row = list([ row.copy() for row in new_grid ])
+        for i in range(1, 5):
+            for y, row in enumerate(first_tile_row):
+                new_grid.append([])
+
+                for x, node in enumerate(row):
+                    risk_level = node.risk_level + i
+                    if risk_level > 9:
+                        risk_level -= 9
+                    new_grid[-1].append(Node(risk_level, x, y + i*tile_height))
+
+        self.grid = new_grid
+        self.map_node_connections()
+        self.target = self.grid[-1][-1]
+
 def part1_solution(file_input):
     cave_mapper = CaveMapper()
     cave_mapper.read_file_input(file_input)
     return cave_mapper.calculate_best_route()
     
 def part2_solution(file_input):
-    return 0
+    cave_mapper = CaveMapper()
+    cave_mapper.read_file_input(file_input)
+    cave_mapper.expand_map()
+    return cave_mapper.calculate_best_route()
 
 if __name__ == '__main__':
     with open('inputs/15.txt', 'r') as file_input:

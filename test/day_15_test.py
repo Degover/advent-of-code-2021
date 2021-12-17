@@ -75,6 +75,22 @@ class Day_15_Tests(unittest.TestCase):
         self.assertEqual(node_b.parent, node)
         self.assertTrue(node.was_visited)
 
+    def testCaveMapper_ExpandMap_WithSingleNode_ShouldExpandCorrectly(self):
+        cave_mapper = CaveMapper()
+        cave_mapper.grid =  [ [Node(8)] ]
+
+        cave_mapper.expand_map()
+
+        expected_grid = [
+            [8, 9, 1, 2, 3],
+            [9, 1, 2, 3, 4],
+            [1, 2, 3, 4, 5],
+            [2, 3, 4, 5, 6],
+            [3, 4, 5, 6, 7]
+        ]
+        grid = [ [ node.risk_level for node in row ] for row in cave_mapper.grid ]
+        self.assertListEqual(grid, expected_grid)
+
     def testPart1_RunSolution_WithExampleInput_ShouldBeCorrect(self):
         file_stub = FileStub()
         file_stub.set_array(test_input)

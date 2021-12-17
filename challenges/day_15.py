@@ -42,14 +42,13 @@ class CaveMapper:
 
         self.source = self.grid[0][0]
         self.source.risk_distance = 0
-        self.source.risk_level = 0
 
         self.target = self.grid[-1][-1]
 
         self.map_node_connections()
         self.unvisited_nodes.append(self.source)
 
-    def map_node_connections(self):
+    def map_node_connections(self) -> None:
         for y, row in enumerate(self.grid):
             for x, node in enumerate(row):
                 node.connections = []
@@ -63,7 +62,7 @@ class CaveMapper:
                     left_node.connections.append(node)
                     node.connections.append(left_node)
 
-    def visit_node(self, node: Node):
+    def visit_node(self, node: Node) -> None:
         self.unvisited_nodes.remove(node)
         node.was_visited = True
 
@@ -110,7 +109,36 @@ class CaveMapper:
 
         self.grid = new_grid
         self.map_node_connections()
+
+        self.source = self.grid[0][0]
+        self.source.risk_distance = 0
+
         self.target = self.grid[-1][-1]
+
+        self.unvisited_nodes = [self.source]
+
+    def print_paths(self) -> None:
+        '''Debug use only'''
+        simple_map = [ [ (
+            node.risk_distance,
+            node.parent is not None and node.parent.x > node.x,
+            node.parent is not None and node.parent.y > node.y
+        ) for node in row ] for row in self.grid ]
+
+        final_str = ''
+        for row in simple_map:
+            for i in range(2):
+                for distance, is_left, is_above in row:
+                    if i == 0:
+                        char = 'v' if is_above else ''
+                        final_str += f'\t\t{char}'
+                    else:
+                        char = '>' if is_left else ''
+                        final_str += f'\t{char}\t{distance}'
+                final_str += '\n'
+            final_str += '\n'
+
+        print(final_str)
 
 def part1_solution(file_input):
     cave_mapper = CaveMapper()
